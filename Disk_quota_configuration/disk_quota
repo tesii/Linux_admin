@@ -1,0 +1,18 @@
+mkdir /www
+mount /dev/sda5 /www
+vim /etc/fstab
+useradd testuser1
+passwd testuser1
+chmod o+w /www
+ll -d  /www
+chmod 757 /www
+su testuser1
+mount -o remount,usrquota,grpquota,rw /www
+mount | grep /www
+quotacheck -cugm /www
+cd /www
+quotaon -augv
+edquota testuser1
+mount -o remount,usrquota,grpquota,rw /www
+su testuser1
+repquota -a

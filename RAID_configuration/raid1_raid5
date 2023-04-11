@@ -1,0 +1,21 @@
+1. Create Raid1
+mdadm -C /dev/md0 -a yes -l 1 -n 2 /dev/sda8 /dev/sd9
+cat /proc/mdstart
+mkfs.ext3 /dev/md0
+mount /dev/md0 /mtn
+mdadm /dev/md0 -f /dev/sda8
+mdadm /dev/md0 -r /dev/sda8
+mdadm /dev/md0 -a /dev/sda9
+2. Create Raid5
+/dev/sda11 +2000M
+/dev/sda12 +2000M
+/dev/sda13 +2000M
+/dev/sda14 +2000M
+changing partiton type: t
+Hec code fd
+mdadm -C /dev/md1 -a yes -l 5 -n 3 /dev/sda11 /dev/sd12 /dev/sd13
+mkfs.ext3 /dev/md1
+fsck -f /dev/md1
+mdadm /dev/md0 -f /dev/sda13
+mdadm /dev/md0 -r /dev/sda13
+mdadm /dev/md0 -a /dev/sda14
