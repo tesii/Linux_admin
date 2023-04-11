@@ -3,16 +3,13 @@
 This is a timeline about linux 
 
 ## Table of content
-
+[REPOSITORY]()
+[DHCP4]()
+[DHCP6]()
 [NAVIGATION]()
-
 [USER MANAGEMENT]()
-
 [DNS]()
-
 [RAID]()
-
-
 [KICKSTART]()
 
 ## CONTRUBUTING
