@@ -1,0 +1,36 @@
+setup
+--> Select Device Configuration
+eth0 // Depends on your interface name either eth0,1,2,3,...
+Go on use DHCP then press space key to remove * Hit Enter / TAB
+Static ip: 192.168.0.2
+Netmask: 255.255.255.0
+Default gateway IP: 192.168.0.1
+-then press OK, then Save&Quit
+��cd /etc/sysconfig/network-scripts/
+��vim ifcfg-eth0
+Then edit the following:
+ONBOOT=yes
+:wq (Write"Save" and Quit)
+B. Create and Configure Alias sub-interface of eth0
+--------------------------------------------
+Step1: Log in to Linux and Open Terminal window.
+To change to Root access
+�� Type su Hit Enter key!
+�� Enter your Password
+Step2: We are going to edit configure network Interface saved from directory
+network-script
+�� cd /etc/sysconfig/network-scripts/
+�� cp ifcfg-eth0 ifcfg-eth0:1
+�� vim ifcfg-eth0:1
+DEVICE=eth0:1
+IPADDR=172.16.10.2
+NETMASK=255.255.0.0
+GATEWAY=172.16.10.1
+:wq (write and quit)
+Step3: We need to Create a link from the new device definition you created in
+each case of the networking Configuration directrories where the network
+management scripts expect to find them. Enter the following two commands
+while still working in the /etc/sysconfig/network-scripts/ directories
+(inorder to check your working directory type 'pwd')
+�� ln ifcfg-eth0:1 ../networking/device/
+�� ln ifcfg-eth0:1 ../networking/profiles/default

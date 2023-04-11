@@ -1,0 +1,16 @@
+
+
+# Array of file names to create
+FILES=("file1.txt" "file2.txt" "file3.txt")
+
+# Loop through the array and create files
+for filename in "${FILES[@]}"; do
+    # Check if file already exists
+    if [ -e "$filename" ]; then
+        echo "File '$filename' already exists. Skipping creation."
+    else
+        # Create file
+        touch "$filename"
+        echo "File '$filename' created."
+    fi
+done

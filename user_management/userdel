@@ -1,0 +1,15 @@
+userdel -r user1
+or
+#!/bin/bash
+
+USERS=("user1" "user2" "user3")
+
+e users
+for username in "${USERS[@]}"; do
+
+        userdel -r "$username"
+        echo "User '$username' deleted."
+    else
+        echo "User '$username' does not exist. Skipping deletion."
+    fi
+done

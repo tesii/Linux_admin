@@ -1,0 +1,6 @@
+# Add users to groups
+usermod -a -G group1 user1
+usermod -a -G group1 user2
+usermod -a -G group2 user3
+usermod -a -G group2 user4
+usermod -a -G group2 user5

@@ -1,0 +1,75 @@
+1. Static IPv6 Configuration
+----------------------------
+You need to update and configure The following files for IPv6 configuration:
+/etc/sysconfig/network : Turn on networking in this file.
+/etc/sysconfig/network-scripts/ifcfg-eth0 : Set default IPv6 router IP and server
+IP address in this file.
+��Open Terminal:
+Change to Root access
+Step1: Type su Hit Enter key!
+Step2: Enter your Password
+��You need to edit the following file
+Step3: vim /etc/sysconfig/network
+Append the following line:
+NETWORKING_IPV6=yes
+��You need to change to directory with network-scripts
+Step4:
+��cd /etc/sysconfig/network-scripts/
+��vim ifcfg-eth0
+Append following config directives for IPv6:
+IPV6INIT=yes
+IPV6_AUTOCONF=no
+MTU=1500
+
+IPV6ADDR=2002::10/64
+IPV6_DEFAULTGW=2002::1
+:wq Saving file
+Restart networking
+�� /etc/init.d/network restart
+Verify your configuration by pinging ipv6
+��ping6 2002::10
+
+N.B: If you wish to add alias Ipv6 or secondary one after
+IPV6ADDR(Primary ipv6) add
+IPV6ADDR_SECONDARIES=<IPv6-IP-Address>
+
+DHCP for IPv6 (DHCPv6)
+--------------------------
+A. SERVER
+==========
+The DHCPv6 server configuration file is installed together with the
+dhcp package and it can be found at /etc/dhcp/dhcpd6.conf
+A simple DHCPv6 server configuration file can look like this:
+subnet6 2002::/64 {
+
+range6 2002::129 2002::254;
+option dhcp6.domain-search "gishushu.rw";
+
+}
+==> To start the DHCPv6 service, enter the command as root.
+�� service dhcpd6 start
+
+==> To stop the DHCPv6 server, use the command.
+�� service dhcpdv6 stop
+==> We are going to advertise our DHCP6 service using radvd
+��yum install radvd -y
+��vim /etc/radvd.conf
+:se nu
+un comment from line 6-18 removing # in front of each line
+on line 11 change prefix 2002::/64
+:wq (Write"Save" and Quit)
+��sysctl net.ipv6.conf.all.forwarding=1
+Restart the radvd service:
+�� service radvd restart
+
+B. CLIENT
+===========
+The default configuration of the DHCPv6 client works fine in the most cases. However,
+to configure a DHCP client manually:
+�� On the panel on top of you screen, right click the network icon.
+�� click "Edit Connections..."
+�� Double Click on any Interface with to have dhcpv6 ip
+�� Go to the "IPv6 Settings" tab.
+�� Method, choose "Automatic."
+�� Untick Require IPv6 addressing for this connection to complete
+�� Then Hit apply and then close.

@@ -1,0 +1,29 @@
+
+1.#mkdir /linuxrepo
+2.cd /media/RHEL_ by pressing on TaB IT WILL COMPLETE THE LINE
+3.cd /Packages
+4.[....Packages on RHEL6 and /Packages]rp
+#cp * -v /eva (-v is verbose to show all that is beeing copied)
+5.rpm -ivh deltarpm[Tab]
+6.rpm -ivh python-deltarpm[Tab]
+7.#rpm -ivh createrepo-0.4.11-3.....rpm
+8.#createrepo -v /linuxrepo  --compile an XML file to resolve dependency
+---createrepo is a program that creates a repomd (xml-based rpm metadata) 
+repository from a set of rpms. 
+9.#vim /etc/yum.repos.d/rhel.... press tab
+cd /etc/yum.repos.d
+#rm -f *.repo (this is done in case there some default files messing up your repo to function)
+#vim /etc/yum.repos.d/class.repo
+[Server]
+name=Linux Server
+baseurl=file:///linuxrepo
+enabled=1
+gpgcheck=0
+    
+:wq
+1.to copy we press 7 then yy
+2.delete : select using down or 
+upward arrow then press : dd
+3.paste : p
+4.save and quit : shift : wq
+#yum repolist

@@ -1,0 +1,13 @@
+This is the script, 
+I created 10 users named patty1 to patty10 alternating with the number 1 to 10
+I forced the user to change password as soon as they log in
+then, I set that their account will expire at the end of this year
+when run this is the output
+for i in `seq 1 10`
+do
+useradd patty$i
+echo 'linux@23580' |passwd --stdin patty$i
+chage -d 0 patty$i
+chage -E 2023-12-31 patty$i
+done
+

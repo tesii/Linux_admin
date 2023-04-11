@@ -1,0 +1,73 @@
+Lock the password
+------------------
+To lock a users account use the command usermod -L or passwd -l. 
+Both the commands adds an exclamation mark (“!”) 
+in the second field of the file /etc/passwd. For example :
+
+
+# usermod -L testuser
+Before and After this activity check the #cat /etc/passwd
+or
+# passwd -l testuser
+
+
+Expire the user account
+=======================
+The commands passwd -l and usermod -L are ineffcient when it comes 
+to disable/lock user accounts. 
+
+To completely disable user accounts you can user the command #chage -E0
+
+# chage -E0 testuser
+
+Expiring an account via use of the 8th field in /etc/shadow (using “chage -E”)
+will block all access methods that use PAM to authenticate a user.
+
+
+
+
+
+Verify if the account is locked or disabled.
+===========================================
+For each of the methods described above, you can verify if the user account 
+is locked/disabled using below methods.
+
+1. Check if the user account is locked.
+
+Check for the flag *LK* in the below command output which indicates that the 
+account is locked.
+
+# passwd --status root
+
+root *LK* 2017-07-19
+
+2. Check if the account has an expire date.
+Check for the lines Password expires and Account expires to check if the account password is expired.
+
+# chage -l username
+
+
+
+How to set expiration date
+==========================
+
+You can set a password to expire 1/1/2021
+
+#chage -E 2021-01-01 testuser
+
+# chage -l testuser 
+This will give you the status of the current user
+
+# chage -W 10 testuser
+The user testuser will be warned 10 days prior to his password expiring.
+
+#chage -I 2 testuser
+This example means that before user testuser’s password expires, 
+his account will be inactive for 2 days before it is locked.
+
+
+#chage -M 5 user1 
+This will force the user to change the password in 5 days.
+
+#chage -d 0 claude
+Enabling users to change the password at their first logon

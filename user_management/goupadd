@@ -1,0 +1,6 @@
+
+for i in `seq 1 5`
+do
+groupadd group$i
+echo -e "testuser\ntestuser" | passwd group$i
+done

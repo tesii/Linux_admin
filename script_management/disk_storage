@@ -1,0 +1,9 @@
+This script will notify me if my disk is used at over 20%, 
+
+It will send an email alert to my email patience.linux.24123@gmail.com
+space=$(df -h | grep '/dev/sda2' | awk {'print $5'} )
+max=20%
+if [${space%?}-ge${max%?} ]; then
+	echo "i'm patience, memory used on $(hostname) is $space
+at $(date)" | mail -v -s " Memory Capacity" patience.linux24123@gmail.com
+fi 

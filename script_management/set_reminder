@@ -1,0 +1,6 @@
+echo "patience, remember to do pushups and develop muscles" | mail -v -S "remindinder"
+patience.linux.24123@gmail.com
+for i in `seq 1 5`
+do
+echo "the person using this pc remember to do your work" >>/home/patty$i/kukwibutsa.txt
+done

@@ -1,0 +1,18 @@
+CREATION OF USERS
+================
+useradd user1
+useradd user2
+useradd user3
+useradd user4
+useradd user5
+
+CREATION OF MANY USERS AT ONCE
+===============================
+#!/bin/bash
+for i in `seq 1 5`
+do
+useradd --create-home user$i
+echo -e "testuser\ntestuser" | passwd user$i
+done
+
+

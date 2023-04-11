@@ -1,0 +1,15 @@
+
+This creates backup of my users files on the NAS (Remote desktop)
+I used patty* to only backup files of the 5 accounts of Nkurunziza because my machine has 
+many other users
+
+dat=$(date)
+IBIZIGAMWE= `date +%b-%d-%y`
+for i in `seq 1 5`
+do
+echo "what patty$i stored on $dat"
+>> /home/patty$i/file$i.txt
+done
+zip ibibitswe-$IBIZIGAMWE.zip /home/patty*/*.txt
+scp ibibitswe-$IBIZIGAMWE.ZIP root@192.168.10.5:/root/
+Desktop/

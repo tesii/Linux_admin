@@ -1,0 +1,133 @@
+Automated Installation of RHEL6
+===============================
+
+Before you run RHEL6 OS on network you must configure the server to run with
+PXE mode, where your NIC has to support that feature.
+
+
+1. Download the VirtualBox Extension Pack version similar to your virtual box version from google and install it.
+=================================================================================================================================================
+
+- Install it through virtualbox preference.
+- File->Preferences->Extension->add package ->Browse for it ->Install it.
+To enable PCs to have PXE capability to boot from the network.
+DHCP must be configured in your server so that you are able to to offer IP automatically
+to the hosts.
+
+# TFTP boot diretory=>/var/lib/tftpboot
+2. Install the right packages
+==============================
+# yum repolist    --listing all packages and original source including repo name 
+=> Required packages:dhcp,tftp-server,syslinux,vsftpd,system-config-kickstart
+# yum -y install  dhcp  tftp-server  syslinux  vsftpd  system-config-kickstart
+
+# edit some lines: #vim /etc/dhcp/dhcpd.conf
+3.Copy the configuration from the default location to the desired location.
+===========================================================================
+#cp /usr/share/doc/dhcp-4.1.1/dhcpd.conf.sample /etc/dhcp/dhcpd.conf 
+4.locate the bootp section and edit accordingly
+===============================================
+##comment all from DHCP server to understand...
+Please comment line 24-44
+Then from line 46-60 write your configurations
+allow booting;
+allow bootp;
+authoritative;
+#A slightly #nt configuration for an internal subnet
+subnet 192.168.0.0 netmask 255.255.255.0 {
+range 192.168.0.4 192.168.0.20;
+option domain-name "auca.ac.rw"
+option routers 192.168.0.1;
+option broadcast-address 192.168.0.255
+default-lease-time 400;
+max-lease-time 800;
+next-server 192168.0.2;  ---Sometimes if not pointing to its self it maybe an issue to some platforms!!!
+filename"pxelinux.0";
+}
+# service dhcpd restart
+# chkconfig dhcpd on
+ # service dhcpd status
+# yum -y install vsftpd
+# yum -y install tftp-server
+edit #vim /etc/xinetd.d/tftp
+disable=no;         --From yes to no so that the tftp service is not disabled!
+#service xinetd restart
+#service xinetd status
+#chkconfig xinetd on
+   
+Then copy the RHEL6 files to FTP boot directory
+Insert the DVD-in the virtual machine
+# cp * -vrf /media/RHEL*/   /var/ftp/pub   
+#cd /media/RHEL*/isolinux
+isolinux#cp * -vrf /var/lib/tftpboot 
+#cd /var/lib/tftpboot
+tftpboot#ls -l  
+tftpboot#mkdir pxelinux.cfg   
+tftpboot#cp -v isolinux.cfg pxelinux.cfg/default
+# cp -v /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot
+Finally restart all services and make sure the firewall is off.
+#system-config-firewall --disable firewall---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#servce vsftpd restart
+#service xinetd restart
+#service dhcpd restart
+#service vsftpd status
+#chkconfig vsftpd on
+#chkconfig xinetd on
+#chkconfig dhcpd on
+Since we are dealing with kickstart installation we need to automate 
+everything t o include password creater partition and all stuff
+# yum -y install system-config-kickstart
+Open GUI
+Select Basic Configuration
+File-open-anaconda-ks.cfg
+Root:redhat
+Confirm pwd:redhat
+Check:Reboot after installation
+Installation method: Perform new installation
+Installation source:FTP Server:192.168.0.2
+FTP directory:pub
+Boot loader options --leave it
+Partition information: Add
+/ etx4 10000
+/swap 2048
+/boot 500
+Network configuration: select eth0 with DHCP
+Other options leave them intact.
+File-save :root->Filesystem->var->ftp->pub->save
+#cd /var/ftp/pub
+#ls
+ks.cfg
+#vim ks.cfg
+Check all configuration if they reflect the reality
+#q!
+#cd /var/lib/tftpboot/
+#cd pxelinux.cfg
+#vim default --edit a configurations
+#vim default
+Change welcome message maybe to see effect as you want
+under labels append
+label kickstart installation 
+kernel vmlinuz
+append  initrd=initrd.img  linux ks=ftp://192.168.0.2/pub/ks.cfg
+:wq! --Apply this when the file is read only as u would wish to save..
+#service xinetd restart
+Continue the client installation and when the time to reboot comes reboot and finally
+in the menu to perform post-installation you find..kickstart installation menu is already there
+Then select it and press enter....follow the the screen and supply needed info.
+#tail -f /var/log/messages  ---from the server to check which address the PC picks
+Look at DHCP PACK messafe on IP u find,,,,
+FTP://192.168.0.2/pub           --This is for the server
+DVD#cp * -vrf /media/RHEL*/   /var/ftp/pub   --copy all content of the DVD in pub
+#cd /var/lib/tftpboot/pxelinux.cfg/
+#yum -y tftp-server
+#yum -y syslinux
+#system-config-kickstart
+Lets look at what we do for the client now: But for the server as well when copying files to /var/ftp/pub
+*************************************************************************************************
+Boot your client from the network..and while it asks the IP configuration
+Choose: URL
+# Create a virtual machine and give it some harware features
+Go to system-Boot order-select network among other features and push it to be the first boot area for
+PXE purposes.
+# On the network part select bridged and select NIC or WLAN card.
+:)
